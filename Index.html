@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remote Connect</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#101827;
+  color:white;
+  text-align:center;
+  padding:25px 15px;
+}
+.card{
+  max-width:420px;
+  margin:50px auto;
+  background:#1e293b;
+  padding:25px;
+  border-radius:18px;
+}
+h1{color:#38bdf8}
+button{
+  width:100%;
+  padding:15px;
+  margin-top:12px;
+  border:0;
+  border-radius:10px;
+  background:#0284c7;
+  color:white;
+  font-size:17px;
+}
+video{
+  width:100%;
+  margin-top:15px;
+  background:black;
+  border-radius:12px;
+}
+#status{color:#86efac}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Remote Connect</h1>
+  <p>Secure Screen Sharing</p>
+  <p id="status">সংযোগের জন্য প্রস্তুত</p>
+
+  <button onclick="shareScreen()">
+    Share My Screen
+  </button>
+
+  <video id="screen" autoplay playsinline></video>
+</div>
+
+<script>
+async function shareScreen(){
+  const status=document.getElementById("status");
+  const video=document.getElementById("screen");
+
+  try{
+    const stream =
+      await navigator.mediaDevices.getDisplayMedia({
+        video:true,
+        audio:false
+      });
+
+    video.srcObject=stream;
+    status.innerText="স্ক্রিন শেয়ার চালু হয়েছে";
+
+    stream.getVideoTracks()[0]
+      .addEventListener("ended",()=>{
+        video.srcObject=null;
+        status.innerText="স্ক্রিন শেয়ার বন্ধ হয়েছে";
+      });
+
+  }catch(error){
+    status.innerText="অনুমতি দেওয়া হয়নি";
+  }
+}
+</script>
+</body>
+</html>
